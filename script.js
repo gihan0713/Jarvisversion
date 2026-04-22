@@ -5,7 +5,7 @@
 
 // ===== Configuration =====
 const CONFIG = {
-    API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+    API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
     MAX_HISTORY: 50,
     TYPING_SPEED: 12,
     STORAGE_KEY: 'jarvis_api_key',
