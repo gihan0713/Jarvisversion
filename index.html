@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS AI - Powered by Gemini</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- ===== API KEY SETUP MODAL ===== -->
+    <div class="modal-overlay" id="api-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="jarvis-logo-small">
+                    <div class="logo-ring"></div>
+                    <div class="logo-center"></div>
+                </div>
+                <h2>Initialize J.A.R.V.I.S</h2>
+                <p class="modal-subtitle">Just A Rather Very Intelligent System</p>
+            </div>
+            
+            <div class="modal-body">
+                <div class="api-input-group">
+                    <label for="api-key-input">
+                        <i class="fas fa-key"></i> Enter Your Gemini API Key
+                    </label>
+                    <div class="input-wrapper-modal">
+                        <input 
+                            type="password" 
+                            id="api-key-input" 
+                            placeholder="Paste your Gemini API key here..."
+                            autocomplete="off"
+                        >
+                        <button type="button" id="toggle-api-visibility" class="toggle-btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="input-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Get your free API key from 
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                    </p>
+                </div>
+                
+                <div class="api-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="save-api-key">
+                        <span class="checkmark"></span>
+                        Remember my API key (stored locally)
+                    </label>
+                </div>
+                
+                <button id="connect-btn" class="connect-btn">
+                    <i class="fas fa-plug"></i> Connect to JARVIS
+                </button>
+                
+                <div class="error-message" id="api-error"></div>
+                
+                <div class="modal-info">
+                    <h4><i class="fas fa-shield-alt"></i> Security Note</h4>
+                    <p>Your API key is stored only in your browser's local storage. 
+                    It is never sent to our servers. You can clear it anytime from settings.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div class="app-container hidden" id="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="jarvis-logo">
+                    <div class="logo-ring ring-1"></div>
+                    <div class="logo-ring ring-2"></div>
+                    <div class="logo-ring ring-3"></div>
+                    <div class="core-center"></div>
+                </div>
+                <h2>J.A.R.V.I.S</h2>
+                <p class="version">v2.0.1 • Gemini Powered</p>
+            </div>
+            
+            <div class="sidebar-actions">
+                <button id="new-chat-btn" class="sidebar-btn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+                <button id="clear-history-btn" class="sidebar-btn">
+                    <i class="fas fa-trash"></i> Clear History
+                </button>
+            </div>
+            
+            <div class="api-status">
+                <div class="api-badge">
+                    <span class="status-dot online"></span>
+                    <span id="api-status-text">Connected</span>
+                </div>
+                <button id="change-api-btn" class="change-api-btn">
+                    <i class="fas fa-exchange-alt"></i> Change API Key
+                </button>
+            </div>
+            
+            <div class="chat-history" id="chat-history">
+                <h3>Recent Chats</h3>
+                <ul id="history-list">
+                    <li class="empty-history">No conversations yet</li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="settings-btn" class="icon-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="about-btn" class="icon-btn" title="About">
+                    <i class="fas fa-info"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Header -->
+            <header class="main-header">
+                <button id="sidebar-toggle" class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title">
+                    <span class="status-indicator online"></span>
+                    JARVIS AI Assistant
+                </div>
+                <div class="header-actions">
+                    <button id="voice-toggle" class="icon-btn" title="Voice Mode">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="export-btn" class="icon-btn" title="Export Chat">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chat-container">
+                
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-animation">
+                        <div class="core-ring ring-1"></div>
+                        <div class="core-ring ring-2"></div>
+                        <div class="core-ring ring-3"></div>
+                        <div class="core-center"></div>
+                    </div>
+                    <h1 class="welcome-title">J.A.R.V.I.S</h1>
+                    <p class="welcome-subtitle">Just A Rather Very Intelligent System</p>
+                    <p class="welcome-desc">How may I assist you today, sir?</p>
+                    
+                    <div class="suggestion-cards">
+                        <div class="suggestion-card" data-prompt="Explain quantum computing in simple terms">
+                            <div class="card-icon"><i class="fas fa-atom"></i></div>
+                            <span>Explain quantum computing</span>
+                        </div>
+                        <div class="suggestion-card" data-prompt="Write a Python function to sort a list using quicksort">
+                            <div class="card-icon"><i class="fas fa-code"></i></div>
+                            <span>Write Python code</span>
+                        </div>
+                        <div class="suggestion-card" data-prompt="What are the latest AI trends in 2025?">
+                            <div class="card-icon"><i class="fas fa-robot"></i></div>
+                            <span>AI Trends 2025</span>
+                        </div>
+                        <div class="suggestion-card" data-prompt="Help me debug this JavaScript code: function add(a,b) { return a + b }">
+                            <div class="card-icon"><i class="fas fa-bug"></i></div>
+                            <span>Debug my code</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div class="messages-area hidden" id="messages-area"></div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <form id="chat-form" class="chat-form">
+                        <div class="input-actions-left">
+                            <button type="button" id="attach-btn" class="input-action-btn" title="Attach File">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="file" id="file-input" hidden accept="image/*,.pdf,.txt,.doc,.docx">
+                        </div>
+                        
+                        <div class="input-field-wrapper">
+                            <textarea 
+                                id="user-input" 
+                                class="chat-input" 
+                                placeholder="Ask JARVIS anything..." 
+                                rows="1"
+                                maxlength="4000"
+                            ></textarea>
+                            <div class="file-preview hidden" id="file-preview">
+                                <span class="file-name"></span>
+                                <button type="button" class="remove-file" id="remove-file">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="input-actions-right">
+                            <button type="button" id="stop-btn" class="input-action-btn hidden" title="Stop Generating">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button type="submit" id="send-btn" class="send-btn" title="Send Message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <p class="disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    JARVIS AI may produce inaccurate information. Verify important information.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Voice Overlay -->
+    <div class="voice-overlay hidden" id="voice-overlay">
+        <div class="voice-container">
+            <div class="voice-animation">
+                <div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+            </div>
+            <p class="voice-text">Listening...</p>
+            <p class="voice-hint">Speak now</p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Initializing JARVIS Systems...</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
